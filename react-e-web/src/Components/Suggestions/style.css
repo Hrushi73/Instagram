@@ -1,0 +1,28 @@
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  text-align: left;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.heading-left,
+.heading-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.follow-container {
+  display: flex;
+  flex-direction: column;
+}

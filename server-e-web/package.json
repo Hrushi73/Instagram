@@ -1,0 +1,25 @@
+{
+  "name": "server-e-web",
+  "version": "1.0.0",
+  "description": "react app",
+  "main": "Web.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "child_process": "^1.0.2",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.6",
+    "multer": "^1.4.3",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "HSM",
+  "license": "ISC"
+}

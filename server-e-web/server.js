@@ -1,0 +1,242 @@
+//Express
+const express = require("express");
+const app = express();
+const path = require("path");
+//Database
+const mongoose = require("mongoose");
+const User = require("./Models/userSchema");
+const Post = require("./Models/postSchema");
+//bodyParser
+var bodyParser = require("body-parser");
+//port
+const PORT = process.env.PORT || 3001;
+//CookieParser
+var cookieParser = require("cookie-parser");
+//Authentication
+const Authenticate = require("./middleware/auth");
+//Cors
+const cors = require("cors");
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
+//other middlewares
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+// Static Middleware
+app.use(express.static(path.join(__dirname, "public")));
+//Multer middleware
+var { upload1, upload2, getselectedImage } = require("./middleware/multer");
+const multer = require("multer");
+//Chiled_process Python
+const { spawn } = require("child_process");
+
+//signup post request
+app.post("/signup", (req, res) => {
+  console.log(req.body);
+  const { userName, email, password } = req.body;
+  const newUser = new User({
+    userName: userName,
+    email: email,
+    password: password,
+  });
+  newUser.save(function (err) {
+    if (err) {
+      if (err.name === "MongoServerError" && err.code === 11000) {
+        console.log(err);
+        // Duplicate username
+        return res
+          .status(500)
+          .send({ success: false, message: "User already exist!" });
+      }
+      console.log(err);
+      return res.status(500).send(err);
+    } else {
+      return res.status(200).send("User is registered successfully");
+    }
+  });
+});
+
+//Login Post request
+app.post("/Login", async (req, res) => {
+  try {
+    let token;
+    const ExistUser = await User.findOne({ email: req.body.email });
+    if (ExistUser && ExistUser.password == req.body.password) {
+      token = await ExistUser.generateAuthToken();
+      res.cookie("jwtoken", token, {
+        expires: new Date(Date.now() + 25892000000),
+        sameSite: "lax",
+        httpOnly: true,
+      });
+      res.status(200).send("User is Logged in successfully");
+    } else {
+      res.status(500).send("Invalid Email or Password");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// get userdata with all posts
+app.get("/Profile", Authenticate, async (req, res) => {
+  await User.findById(req.user._id)
+    .populate("posts")
+    .exec((err, docs) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(docs);
+        res.send(docs);
+      }
+    });
+});
+
+app.post("/Profile", Authenticate, upload2, (req, res) => {
+  const selectedImage = getselectedImage();
+  User.findByIdAndUpdate(
+    req.user._id,
+    {
+      profile: selectedImage,
+    },
+    function (err, docs) {
+      if (err) {
+        return res.status(500).send(err);
+      } else {
+        return res.status(200).send("Profile Image is updated successfully :)");
+      }
+    }
+  );
+});
+
+//Post post request
+app.post("/selectImage", Authenticate, function (req, res) {
+  upload1(req, res, function (err) {
+    //all that we send through formdata can be obtained here through req.body.something
+    const selectedImage = getselectedImage();
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    } else {
+      const newpost = new Post({
+        image: selectedImage,
+        description: req.body.caption,
+        timeStamp: new Date(),
+        user: req.user._id,
+      });
+
+      newpost.save(async function (err, docs) {
+        if (err) {
+          return res.status(500).send(err);
+        } else {
+          await User.findByIdAndUpdate(req.user._id, {
+            $push: { posts: docs._id },
+          });
+          return res.status(200).send("registered successfully");
+        }
+      });
+    }
+  });
+});
+
+app.get("/fetchpost", Authenticate, async (req, res) => {
+  const following_array = req.user.following;
+  following_array.push(req.user._id);
+  await Post.find({ user: { $in: following_array } })
+    .sort({ timeStamp: -1 })
+    .populate("user")
+    .exec(function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(docs);
+      }
+    });
+});
+
+app.get("/suggestions", Authenticate, function (req, res) {
+  User.find(
+    { _id: { $ne: req.user._id }, followers: { $nin: req.user._id } },
+    { _id: 1, userName: 1 },
+    { limit: 5 },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        const suggestion_array = docs.map((doc) => {
+          return { _id: doc._id, userName: doc.userName };
+        });
+        res.send(suggestion_array);
+      }
+    }
+  );
+});
+
+app.post("/following", Authenticate, function (req, res) {
+  // console.log(req.body._id);
+  User.findByIdAndUpdate(
+    req.user._id,
+    { $addToSet: { following: req.body._id } },
+    function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        User.findByIdAndUpdate(
+          req.body._id,
+          { $addToSet: { followers: req.user._id } },
+          function (err) {
+            if (err) {
+              console.log(err);
+            } else {
+              return res.send("Succesfully posted");
+            }
+          }
+        );
+      }
+    }
+  );
+});
+
+app.post("/comment", Authenticate, function (req, res) {
+  const user = req.user._id;
+  console.log(user);
+  const { postid, comment } = req.body;
+
+  Post.findByIdAndUpdate(
+    postid,
+    {
+      $push: { Comments: { comment: comment, user: user } },
+    },
+    function (err, doc) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(doc);
+        res.send();
+      }
+    }
+  );
+});
+
+app.post("/like", Authenticate, function (req, res) {
+  console.log(req.body);
+  const { postid, value } = req.body;
+  console.log(req.user.userName);
+  Post.findByIdAndUpdate(
+    postid,
+    { likes: { $inc: { count: value } } },
+    function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(docs);
+      }
+      res.send("success");
+    }
+  );
+});
+
+//Port listening
+app.listen(PORT, () => {
+  console.log("App running on port 3001");
+});

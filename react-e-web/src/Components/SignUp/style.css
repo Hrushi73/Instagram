@@ -1,0 +1,68 @@
+.background {
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  /* background-image: url("../../Images/wave-haikei\ \(1\).svg"); */
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.outerContainer {
+  border: 1px solid #ccc;
+  border-radius: 0px;
+  border-color: rgb(163, 163, 163);
+  background-color: white;
+  padding: 1rem !important;
+  width: 300px;
+  /* display: flexbox; */
+}
+
+@media screen and (max-width: 768px) {
+  .outerContainer {
+    width: 70%;
+  }
+}
+
+.atcenter {
+  position: absolute;
+  padding: 5%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); /* for IE 9 */
+  -webkit-transform: translate(-50%, -50%); /* for Safari */
+
+  /* optional size in px or %:
+  width: 100px;
+  height: 100px; */
+}
+
+input {
+  width: 100%;
+  padding: 10px 10px;
+  margin: 4px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  /* #$^#&%^*()&*(^*%$#@%^*(&^%#$@#%^*(^&%#$@!#%^*&(^%$#@!$^%&*-----how to make this width responsive */
+}
+
+.submitbutton {
+  width: 100%;
+  background-color: #0095f6;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submitbutton:active {
+  transform: scale(0.98);
+  box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24);
+}

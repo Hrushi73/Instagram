@@ -1,0 +1,12 @@
+.feed-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+}
+
+@media only screen and (max-width: 786px) {
+  .suggestions-container {
+    display: none;
+  }
+}
