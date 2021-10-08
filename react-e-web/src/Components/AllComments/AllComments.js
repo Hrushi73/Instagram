@@ -1,11 +1,20 @@
 import React from "react";
 import Navbar from "../Navbar/Navbar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 
 const AllComments = () => {
   return (
     <div>
       <Navbar />
-      <div className="ac-outer"> hello welcome home</div>
+      <React.Fragment>
+        <CssBaseline />
+        <Container maxWidth="sm">
+          hi
+          <Box sx={{ bgcolor: "#cfe8fc", height: "100vh" }}>height</Box>
+        </Container>
+      </React.Fragment>
     </div>
   );
 };
