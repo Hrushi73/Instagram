@@ -5,7 +5,7 @@ const AllComments = () => {
   return (
     <div>
       <Navbar />
-      <div className="ac-outer"></div>
+      <div className="ac-outer"> hello welcome home</div>
     </div>
   );
 };
