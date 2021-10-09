@@ -10,6 +10,7 @@ async function main() {
 const userSchema = new mongoose.Schema({
   profile: {
     type: String,
+    default: "default-avatar.jpg ",
   },
   userName: {
     type: String,
@@ -41,18 +42,14 @@ const userSchema = new mongoose.Schema({
   ],
   followers: [
     {
-      type: String,
-      index: true,
-      unique: true,
-      sparse: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
   following: [
     {
-      type: String,
-      index: true,
-      unique: true,
-      sparse: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   ],
 });

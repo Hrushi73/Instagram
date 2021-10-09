@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/post">
           <Post />
         </Route>
-        <Route path="/allComments">
+        <Route path="/allComments/:idOfPost">
           <AllComments />
         </Route>
       </Switch>

@@ -1,12 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHome,
+  faPaperPlane,
+  faSearch,
+  faUserCircle,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
+
 //styles
 import { Wrapper, NavItems } from "./Navbar.styles";
 
 const Navbar = () => {
   return (
     <Wrapper>
-      <h2>Navbar</h2>
+      <h2>Friendly</h2>
       <NavItems>
         <ul>
           <Link to="/home">
@@ -18,7 +27,7 @@ const Navbar = () => {
           </Link>
           <Link to="/post">
             <a href="##" className="post">
-              <li>Posts</li>
+              <li>Post</li>
             </a>
           </Link>
           <Link to="/request">
@@ -38,46 +47,32 @@ const Navbar = () => {
           </Link>
 
           <Link to="/home">
-            <a href="#" className="Home-icon" style={{ color: "#03BFFF" }}>
-              <div>
-                <li>
-                  <i className="fas fa-home"></i>
-                </li>
-              </div>
-            </a>
+            <div>
+              <li className="Home-icon">
+                <FontAwesomeIcon icon={faHome} />
+              </li>
+            </div>
           </Link>
           <Link to="/request">
-            <a
-              href="###"
-              className="new-friend-icon"
-              style={{ color: "#03BFFF" }}
-            >
-              <li>
-                <i className="fas fa-user-plus"></i>
-              </li>
-            </a>
+            <li className="new-friend-icon">
+              <FontAwesomeIcon icon={faUserPlus} />
+            </li>
           </Link>
           <Link to="/search">
-            <a href="#" className="search-icon" style={{ color: "#03BFFF" }}>
-              <li>
-                <i class="fas fa-search"></i>
-              </li>
-            </a>
+            <li className="search-icon">
+              <FontAwesomeIcon icon={faSearch} />
+            </li>
           </Link>
           <Link to="/profile">
-            <a href="#" className="profile-icon" style={{ color: "#03BFFF" }}>
-              <li>
-                <i class="fas fa-user-circle"></i>
-              </li>
-            </a>
+            <li className="profile-icon">
+              <FontAwesomeIcon icon={faUserCircle} />
+            </li>
           </Link>
         </ul>
-        <Link to="">
-          <a href="##" className="post-icon" style={{ color: "white" }}>
-            <li>
-              <i className="fas fa-paper-plane"></i>
-            </li>
-          </a>
+        <Link to="/post">
+          <li className="post-icon">
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </li>
         </Link>
       </NavItems>
     </Wrapper>

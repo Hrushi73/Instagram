@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart,
@@ -9,18 +9,15 @@ import {
   faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import "./style.css";
-import profilePic from "./profile-pic.png";
+//default profile picture
 import axios from "axios";
 
 const PostComp = ({ key, post }) => {
+  console.log(post);
   const { image, description, user } = post;
   const [mycomment, setmycomment] = useState("");
   const [heartColor, setheartColor] = useState("#adadad");
   const History = useHistory();
-
-  // useEffect(() => {
-
-  // }, [])
 
   const handleCommentChange = (event) => {
     setmycomment(event.target.value);
@@ -46,16 +43,27 @@ const PostComp = ({ key, post }) => {
     }
   };
 
-  const goToAllComments = () => {
-    History.push("/allcomments");
+  const goToAllComments = async () => {
+    await (
+      <Link
+        to={{
+          pathname: `/allcomments/${post._id}`,
+        }}
+      ></Link>
+    );
+    History.push(`/allcomments/${post._id}`);
   };
 
   return (
     <article id={key}>
-      <div className="article-bordker">
+      <div className="article-border">
         <div className="post-top">
           <header>
-            <img className="profile-image" src={profilePic} alt="Profile" />
+            <img
+              className="profile-image"
+              src={`http://localhost:3001/ProfileImages/${user.profile}`}
+              alt="Profile"
+            />
             <div className="username-info">
               <div className="username">{user.userName}</div>
             </div>

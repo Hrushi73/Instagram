@@ -29,6 +29,7 @@ var { upload1, upload2, getselectedImage } = require("./middleware/multer");
 const multer = require("multer");
 //Chiled_process Python
 const { spawn } = require("child_process");
+const { timeStamp } = require("console");
 
 //signup post request
 app.post("/signup", (req, res) => {
@@ -85,12 +86,12 @@ app.get("/Profile", Authenticate, async (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        console.log(docs);
         res.send(docs);
       }
     });
 });
 
+//for uploading profile image
 app.post("/Profile", Authenticate, upload2, (req, res) => {
   const selectedImage = getselectedImage();
   User.findByIdAndUpdate(
@@ -173,7 +174,6 @@ app.get("/suggestions", Authenticate, function (req, res) {
 });
 
 app.post("/following", Authenticate, function (req, res) {
-  // console.log(req.body._id);
   User.findByIdAndUpdate(
     req.user._id,
     { $addToSet: { following: req.body._id } },
@@ -197,9 +197,9 @@ app.post("/following", Authenticate, function (req, res) {
   );
 });
 
+//to store comment in database
 app.post("/comment", Authenticate, function (req, res) {
   const user = req.user._id;
-  console.log(user);
   const { postid, comment } = req.body;
 
   Post.findByIdAndUpdate(
@@ -211,13 +211,13 @@ app.post("/comment", Authenticate, function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        console.log(doc);
         res.send();
       }
     }
   );
 });
 
+//to store likes in database
 app.post("/like", Authenticate, function (req, res) {
   console.log(req.body);
   const { postid, value } = req.body;
@@ -234,6 +234,19 @@ app.post("/like", Authenticate, function (req, res) {
       res.send("success");
     }
   );
+});
+
+app.post("/getComments", Authenticate, async function (req, res) {
+  await Post.findById(req.body._id)
+    .sort({ timeStamp: -1 })
+    .populate("Comments.user")
+    .exec(function (err, docs) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(docs);
+      }
+    });
 });
 
 //Port listening
