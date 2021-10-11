@@ -80,7 +80,7 @@ app.post("/Login", async (req, res) => {
 // get userdata with all posts
 app.get("/Profile", Authenticate, async (req, res) => {
   await User.findById(req.user._id)
-    .populate("posts")
+    .populate("posts following followers")
     .exec((err, docs) => {
       if (err) {
         console.log(err);
@@ -172,16 +172,13 @@ app.get("/fetchpost", Authenticate, async (req, res) => {
 app.get("/suggestions", Authenticate, function (req, res) {
   User.find(
     { _id: { $ne: req.user._id }, followers: { $nin: req.user._id } },
-    { _id: 1, userName: 1 },
+    null,
     { limit: 5 },
     function (err, docs) {
       if (err) {
         console.log(err);
       } else {
-        const suggestion_array = docs.map((doc) => {
-          return { _id: doc._id, userName: doc.userName };
-        });
-        res.send(suggestion_array);
+        res.send(docs);
       }
     }
   );

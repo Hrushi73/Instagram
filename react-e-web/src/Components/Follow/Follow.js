@@ -1,15 +1,14 @@
 import axios from "axios";
 import React from "react";
-import profilePic from "./profile-pic.jpg";
 import "./style.css";
 
-function Follow({ username, id, fetchSuggestions }) {
+function Follow({ key, suggestion, fetchSuggestions }) {
   // console.log(id);
   const addFollowing = async () => {
     try {
-      const res = await axios.post("http://localhost:3001/following", {
-        _id: id,
-        userName: username,
+      await axios.post("http://localhost:3001/following", {
+        _id: suggestion._id,
+        userName: suggestion.userName,
       });
       fetchSuggestions();
     } catch (err) {
@@ -18,10 +17,14 @@ function Follow({ username, id, fetchSuggestions }) {
   };
 
   return (
-    <div id={id} className="main-container">
+    <div id={key} className="main-container">
       <div className="left-container">
-        <img className="profile-image" src={profilePic} alt="Profile" />
-        <div>{username}</div>
+        <img
+          className="profile-image"
+          src={`http://localhost:3001/ProfileImages/${suggestion.profile}`}
+          alt="Profile"
+        />
+        <div>{suggestion.userName}</div>
       </div>
       <div>
         <button className="follow-button" onClick={addFollowing}>

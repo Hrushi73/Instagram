@@ -73,7 +73,14 @@ const AllComments = () => {
             </Box>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Box sx={{ borderRadius: "10px", bgcolor: "#AAAAAA" }}>
+            <Box
+              sx={{
+                maxHeight: "80vh",
+                borderRadius: "10px",
+                bgcolor: "#AAAAAA",
+                overflow: "auto",
+              }}
+            >
               {comments.map((comm, index) => {
                 return (
                   <List id={index}>

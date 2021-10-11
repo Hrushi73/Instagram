@@ -6,15 +6,22 @@ import {
   faUser,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  Box,
+  Container,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+} from "@mui/material";
 import { Body, Wrapper, Content, Image, Info, Icons } from "./Profile.style";
 import axios from "axios";
 import Navbar from "../Navbar/Navbar";
-import PopUp from "../PopUp/PopUp";
 
 const Profile = () => {
   const [userData, setUserData] = useState({ followers: [], following: [] });
   const [posts, setPosts] = useState([]);
-  const [popup, setPopup] = useState(false);
   const [option, setoption] = useState("posts");
   const History = useHistory();
 
@@ -48,10 +55,32 @@ const Profile = () => {
     }
   };
 
-  // const Popup = (data) => {
-  //   setPopup(true);
-  //   setImageData(data);
-  // };
+  const handlePosts = (event) => {
+    try {
+      event.preventDefault();
+      setoption("posts");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleFollowers = (event) => {
+    try {
+      event.preventDefault();
+      setoption("followers");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleFollowing = (event) => {
+    try {
+      event.preventDefault();
+      setoption("following");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <>
@@ -99,49 +128,163 @@ const Profile = () => {
           </Content>
           <hr />
           <Icons>
-            <button title="Posts" className="hover-underline-animation">
+            <button
+              title="Posts"
+              onClick={handlePosts}
+              className="hover-underline-animation"
+            >
               <FontAwesomeIcon icon={faImage} size="3x" />
             </button>
-            <button title="Followers" className="hover-underline-animation">
+            <button
+              title="Followers"
+              onClick={handleFollowers}
+              className="hover-underline-animation"
+            >
               <FontAwesomeIcon icon={faUser} size="3x" />
             </button>
-            <button title="Following" className="hover-underline-animation">
+            <button
+              title="Following"
+              onClick={handleFollowing}
+              className="hover-underline-animation"
+            >
               <FontAwesomeIcon icon={faUserFriends} size="3x" />
             </button>
           </Icons>
           <hr className="hover-underline-animation" />
-          {/* {option === "posts" && (
-            <div className="Grid">
-              {posts.map((post, index) => (
-                <div id={index}>
-                  <img
-                    className="Post-style"
-                    src={`http://localhost:3001/inProcessImages/${post.image}`}
-                    alt="posts"
-                  />
-                </div>
-              ))}
-            </div>
-          )} */}
-          <div>hi</div>
-          {/* {popup ? (
-            <PopUp onClose={() => setPopup(false)}>
-              <img
-                src={`http://localhost:3001/inProcessImages/${imageData.image}`}
-                alt="post"
-                className="postImg"
-              />
-              <div className="Info">
-                <div> {userData.userName} </div>
-                <div> {imageData.description} </div>
-                <div className="Comment">
-                  <textarea rows="1"> </textarea>
-                </div>
+
+          <div>
+            {option === "posts" && (
+              <div className="Grid">
+                {posts.map((post, index) => (
+                  <div id={index}>
+                    <img
+                      className="Post-style"
+                      src={`http://localhost:3001/inProcessImages/${post.image}`}
+                      alt="posts"
+                    />
+                  </div>
+                ))}
               </div>
-            </PopUp>
-          ) : (
-            ""
-          )} */}
+            )}
+            {option === "followers" && (
+              <Container maxWidth="sm">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    borderRadius: "10px",
+                    margin: "0",
+                    height: "50vh",
+                    boxSizing: "border-box",
+                    overflow: "auto",
+                  }}
+                >
+                  <List
+                    sx={{
+                      width: "100%",
+                      maxWidth: 360,
+                      borderRadius: "10px",
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <ListItem
+                      sx={{
+                        maxWidth: 360,
+                        borderRadius: "10px",
+                        margin: "10px 0",
+                      }}
+                    >
+                      <ListItemText primary="Followers" />
+                    </ListItem>
+                    {userData.followers.map((user, index) => {
+                      return (
+                        <ListItem
+                          id={index}
+                          sx={{
+                            maxWidth: 360,
+                            backgroundColor: "#AAAAAA",
+                            borderRadius: "10px",
+                            margin: "10px 0",
+                          }}
+                        >
+                          <ListItemAvatar>
+                            <Avatar
+                              alt="Remy Sharp"
+                              src={`http://localhost:3001/ProfileImages/${user.profile}`}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={user.userName}
+                            secondary={`followers : ${user.followers.length}`}
+                            // secondary={`followers : ${user.followers.length}`}
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Box>
+              </Container>
+            )}
+            {option === "following" && (
+              <Container maxWidth="sm">
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    borderRadius: "10px",
+                    margin: "0",
+                    height: "50vh",
+                    boxSizing: "border-box",
+                    overflow: "auto",
+                  }}
+                >
+                  <List
+                    sx={{
+                      width: "100%",
+                      maxWidth: 360,
+                      borderRadius: "10px",
+                      boxSizing: "border-box",
+                    }}
+                  >
+                    <ListItem
+                      sx={{
+                        maxWidth: 360,
+                        borderRadius: "10px",
+                        margin: "10px 0",
+                      }}
+                    >
+                      <ListItemText primary="Following" />
+                    </ListItem>
+                    {userData.following.map((user, index) => {
+                      return (
+                        <ListItem
+                          id={index}
+                          sx={{
+                            maxWidth: 360,
+                            backgroundColor: "#AAAAAA",
+                            borderRadius: "10px",
+                            margin: "10px 0",
+                          }}
+                        >
+                          <ListItemAvatar>
+                            <Avatar
+                              alt="Remy Sharp"
+                              src={`http://localhost:3001/ProfileImages/${user.profile}`}
+                            />
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={user.userName}
+                            secondary={`followers : ${user.followers.length}`}
+                            // secondary={`followers : ${user.followers.length}`}
+                          />
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                </Box>
+              </Container>
+            )}
+          </div>
         </Wrapper>
       </Body>
     </>

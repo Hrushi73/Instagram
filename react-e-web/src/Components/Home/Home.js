@@ -42,7 +42,7 @@ const Home = () => {
           })}
         </div>
         <div className="suggestions-container">
-          <Suggestions />
+          <Suggestions fetchPosts={fetchPosts} />
         </div>
       </div>
     </div>
