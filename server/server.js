@@ -261,6 +261,10 @@ app.post("/getComments", Authenticate, async function (req, res) {
     });
 });
 
+if (process.env.NODE_ENV == "production") {
+  app.use(express.static("build"));
+}
+
 //Port listening
 app.listen(PORT, () => {
   console.log("App running on port 3001");
