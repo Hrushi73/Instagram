@@ -155,7 +155,7 @@ const SignUp = () => {
       <div className="outerContainer atcenter">
         <div>
           <form method="post">
-            <h1 style={{ textAlign: "center" }}>Instagram</h1>
+            <h1 style={{ textAlign: "center" }}>FrenZone</h1>
             <div>
               <input
                 type="text"

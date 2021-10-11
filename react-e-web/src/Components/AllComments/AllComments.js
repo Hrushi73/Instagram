@@ -15,16 +15,17 @@ import {
   Avatar,
   Grid,
 } from "@mui/material";
-import { borderRadius } from "@mui/system";
 
 const AllComments = () => {
+  const { idOfPost } = useParams();
   const [postData, setpostData] = useState({});
   const [comments, setcomments] = useState([]);
-  const { idOfPost } = useParams();
+  const [postOwner, setpostOwner] = useState({});
 
   const fetchCommentsOnPost = async () => {
     const res = await axios.post("/getComments", { _id: idOfPost });
     setpostData(res.data);
+    setpostOwner(res.data.user);
     setcomments(res.data.Comments);
   };
 
@@ -42,7 +43,7 @@ const AllComments = () => {
       <Container
         sx={{
           padding: "1rem 0",
-          bgcolor: "#FDEFEF",
+          bgcolor: "#CCF2F4",
           borderRadius: "10px",
           marginTop: "20px",
         }}
@@ -50,14 +51,19 @@ const AllComments = () => {
         <Grid container spacing={2}>
           <Grid item xs={0} lg={6}>
             <Box sx={{ display: { xs: "none", md: "none", lg: "block" } }}>
-              <ListItem alignItems="flex-start" sx={{ bgcolor: "#CDBBA7" }}>
+              <ListItem alignItems="flex-start" sx={{ bgcolor: "#CCF2F4" }}>
                 <ListItemAvatar>
                   <Avatar
                     alt="Remy Sharp"
                     src={`http://localhost:3001/ProfileImages/default-avatar.jpg}`}
                   />
                 </ListItemAvatar>
-                <ListItemText primary="userName" />
+                <ListItemText
+                  primary={postOwner && postOwner.userName}
+                  secondary={
+                    <React.Fragment>{postData.description}</React.Fragment>
+                  }
+                />
               </ListItem>
               <img
                 className="post-image"
@@ -67,7 +73,7 @@ const AllComments = () => {
             </Box>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Box sx={{ bgcolor: "#CDBBA7" }}>
+            <Box sx={{ borderRadius: "10px", bgcolor: "#AAAAAA" }}>
               {comments.map((comm, index) => {
                 return (
                   <List id={index}>

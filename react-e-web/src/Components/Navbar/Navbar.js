@@ -15,7 +15,7 @@ import { Wrapper, NavItems } from "./Navbar.styles";
 const Navbar = () => {
   return (
     <Wrapper>
-      <h2>Friendly</h2>
+      <h2>FrienZone</h2>
       <NavItems>
         <ul>
           <Link to="/home">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import "./Login.css";
 const axios = require("axios");
@@ -12,6 +12,7 @@ const Login = () => {
     emailMessage: "",
     passwordMessage: "",
   });
+  const [notFoundMessage, setnotFoundMessage] = useState("");
 
   //Email validation
   const isEmailValid = (email) => {
@@ -71,7 +72,6 @@ const Login = () => {
 
   //Data submit
   const submitdata = async (event) => {
-    let res;
     try {
       event.preventDefault();
       setMessages(() => ({
@@ -80,15 +80,18 @@ const Login = () => {
       }));
 
       if (checkEmail(email) && checkPassword(password)) {
-        res = await axios.post("http://localhost:3001/Login", {
+        const res = await axios.post("http://localhost:3001/Login", {
           email: email,
           password: password,
         });
+
         if (res.status === 200) {
+          setnotFoundMessage("");
           History.push("/home");
         }
       }
     } catch (err) {
+      setnotFoundMessage("Either Email or password didn't match");
       console.log(err);
     }
   };
@@ -99,7 +102,8 @@ const Login = () => {
       <div className="outerContainer atcenter">
         <div>
           <form>
-            <h1 style={{ textAlign: "center" }}>Instagram</h1>
+            <h1 style={{ textAlign: "center" }}>FrenZone</h1>
+            <small style={{ color: "red" }}>{notFoundMessage}</small>
             <input
               type="text"
               id="username"

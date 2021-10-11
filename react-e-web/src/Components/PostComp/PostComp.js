@@ -13,7 +13,6 @@ import "./style.css";
 import axios from "axios";
 
 const PostComp = ({ key, post }) => {
-  console.log(post);
   const { image, description, user } = post;
   const [mycomment, setmycomment] = useState("");
   const [heartColor, setheartColor] = useState("#adadad");
@@ -101,11 +100,11 @@ const PostComp = ({ key, post }) => {
                 <FontAwesomeIcon icon={faComment} />
               </button>
             </div>
-            <div>
+            {/* <div>
               <button title="share">
                 <FontAwesomeIcon icon={faShare} />
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* description */}

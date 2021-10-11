@@ -10,7 +10,7 @@ async function main() {
 const userSchema = new mongoose.Schema({
   profile: {
     type: String,
-    default: "default-avatar.jpg ",
+    default: "default-avatar.jpg",
   },
   userName: {
     type: String,

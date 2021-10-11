@@ -3,33 +3,28 @@ import { useHistory } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faImage,
-  faTrash,
-  faUpload,
   faUser,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
 import { Body, Wrapper, Content, Image, Info, Icons } from "./Profile.style";
 import axios from "axios";
-
-import IMAGE from "../../images/navback.jpg";
 import Navbar from "../Navbar/Navbar";
 import PopUp from "../PopUp/PopUp";
 
 const Profile = () => {
   const [userData, setUserData] = useState({ followers: [], following: [] });
   const [posts, setPosts] = useState([]);
-  const [profile, setProfile] = useState("");
   const [popup, setPopup] = useState(false);
-  const [imageData, setImageData] = useState("");
+  const [option, setoption] = useState("posts");
   const History = useHistory();
 
   async function fetchData() {
     const res = await axios.get("http://localhost:3001/Profile");
     setUserData(res.data);
-    console.log(res.data);
     setPosts(res.data.posts);
   }
 
+  //if unauthorised used send to login
   useEffect(() => {
     try {
       fetchData();
@@ -40,13 +35,12 @@ const Profile = () => {
 
   const Update = async (event) => {
     try {
-      event.preventDefault();
+      console.log(event.target.files[0]);
       const data = new FormData();
-      data.append("file", profile);
+      data.append("file", event.target.files[0]);
       const res = await axios.post("http://localhost:3001/Profile", data);
       // then print response status
-      if (res.status !== 500 && res) {
-        alert(res.data);
+      if (res.status !== 500) {
         window.location.reload();
       }
     } catch (err) {
@@ -54,52 +48,25 @@ const Profile = () => {
     }
   };
 
-  const ProfileImg = (e) => {
-    setProfile(e.target.files[0]);
-  };
-
-  const Popup = (data) => {
-    setPopup(true);
-    setImageData(data);
-  };
+  // const Popup = (data) => {
+  //   setPopup(true);
+  //   setImageData(data);
+  // };
 
   return (
     <>
       <Navbar />
       <Body>
         <Wrapper>
-          {profile ? (
-            <button onClick={Update}>
-              <FontAwesomeIcon icon={faUpload} size="2x" />
-            </button>
-          ) : (
-            ""
-          )}
-          <div className="edit-icon">
-            <a href="##">
-              <button
-                title="Trash"
-                style={{
-                  color: "Red",
-                }}
-              >
-                <FontAwesomeIcon icon={faTrash} size="2x" />
-              </button>
-            </a>
-          </div>
           <Content>
             <Image>
               <label className="-label" for="file">
                 <span className="glyphicon glyphicon-camera"> </span>
                 <span> Change Image </span>
               </label>
-              <input id="file" type="file" onChange={ProfileImg} />
+              <input id="file" type="file" onChange={Update} />
               <img
-                src={
-                  userData.profile
-                    ? `http://localhost:3001/ProfileImages/${userData.profile}`
-                    : IMAGE
-                }
+                src={`http://localhost:3001/ProfileImages/${userData.profile}`}
                 alt="profile"
                 id="output"
                 width="200"
@@ -143,19 +110,21 @@ const Profile = () => {
             </button>
           </Icons>
           <hr className="hover-underline-animation" />
-          <div className="Grid">
-            {posts.map((post, index) => (
-              <div id={index} onClick={() => Popup(post)}>
-                <img
-                  className="Post-style"
-                  src={`http://localhost:3001/inProcessImages/${post.image}`}
-                  alt="posts"
-                />
-              </div>
-            ))}
-          </div>
-          {console.log(imageData)}
-          {popup ? (
+          {/* {option === "posts" && (
+            <div className="Grid">
+              {posts.map((post, index) => (
+                <div id={index}>
+                  <img
+                    className="Post-style"
+                    src={`http://localhost:3001/inProcessImages/${post.image}`}
+                    alt="posts"
+                  />
+                </div>
+              ))}
+            </div>
+          )} */}
+          <div>hi</div>
+          {/* {popup ? (
             <PopUp onClose={() => setPopup(false)}>
               <img
                 src={`http://localhost:3001/inProcessImages/${imageData.image}`}
@@ -172,7 +141,7 @@ const Profile = () => {
             </PopUp>
           ) : (
             ""
-          )}
+          )} */}
         </Wrapper>
       </Body>
     </>
